@@ -13,7 +13,11 @@ var jsonWrite = function (res, ret) {
 		})
 		// return
 	} else {
-		res.json(ret);
+		res.json({
+			code:0,
+			msg:'success',
+			data:ret
+		});
 	}
 };
 

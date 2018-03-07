@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
-var database = require('./db/index') 
+var database = require('./db/index')
 var app = express();
 
 // view engine setup
@@ -17,30 +17,53 @@ app.set('view engine', 'jade');
 // uncomment after placing your favicon in /public
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
-app.use('/', index);
+app.use('/api', index);
 app.use('/users', users);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  // res.locals.message = err.message;
+  // res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
+  var sleep = function (time) {
+    return new Promise(function (resolve, reject) {
+      setTimeout(function () {
+        resolve();
+      }, time);
+    })
+  };
+
+  var start = async function () {
+    // 在这里使用起来就像同步代码那样直观
+    console.log('start');
+    await sleep(3000);
+    console.log('end');
+  };
+
+  start();
+  console.log(23344)
   res.status(err.status || 500);
-  res.render(err.message);
+  res.json({
+    status: err.status,
+    messaga: err.message,
+    err: err.stack
+  });
 });
 
 
