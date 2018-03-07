@@ -1,4 +1,4 @@
-var query = require('../db/index');
+var query = require('../query/index');
 var goodsListSql = require('./goodsSql');
 var jsonWrite = function (res, ret) {
 	if (typeof ret === 'undefined') {
@@ -21,22 +21,20 @@ var jsonWrite = function (res, ret) {
 	}
 };
 
-function goodsAll(req, res, next) {
-	query(goodsListSql.goodsAll, '', function (result) {
+async function goodsAll(req, res, next) {
+
+	let result = await  query(goodsListSql.goodsAll);
 		// console.log('查询成功',result);
-		jsonWrite(res, result);
-	});
-
-
+		jsonWrite(res, result);	
 };
 
-function goodsAdd(req, res, next) {
-	var param = req.query || req.params;
-	query(goodsListSql.goodsInsert, [param.name, param.desc, param.price, param.sum], function (result) {
-		jsonWrite(res, result);
-	})
+// function goodsAdd(req, res, next) {
+// 	var param = req.query || req.params;
+// 	query(goodsListSql.goodsInsert, [param.name, param.desc, param.price, param.sum], function (result) {
+// 		jsonWrite(res, result);
+// 	})
 
-};
+// };
 
 function goodsDelete(req, res, next) {
 	var param = req.query || req.params;
