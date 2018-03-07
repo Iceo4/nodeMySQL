@@ -1,11 +1,6 @@
 const mysql = require('mysql');
-const pool = mysql.createPool({
-    // connectionLimit: 100,
-    host: 'localhost',
-    user: 'root',
-    password: 'macbook07',
-    database: 'test'
-});
+const config = require('../config/index');
+const pool = mysql.createPool(config);
 
 let query = function (sql, values) {
     return new Promise((resolve, reject) => {
