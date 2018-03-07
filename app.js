@@ -7,7 +7,6 @@ var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
-var database = require('./db/index')
 var app = express();
 
 // view engine setup
@@ -41,23 +40,6 @@ app.use(function (err, req, res, next) {
   // res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
-  var sleep = function (time) {
-    return new Promise(function (resolve, reject) {
-      setTimeout(function () {
-        resolve();
-      }, time);
-    })
-  };
-
-  var start = async function () {
-    // 在这里使用起来就像同步代码那样直观
-    console.log('start');
-    await sleep(3000);
-    console.log('end');
-  };
-
-  start();
-  console.log(23344)
   res.status(err.status || 500);
   res.json({
     status: err.status,
