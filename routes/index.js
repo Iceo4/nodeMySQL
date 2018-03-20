@@ -1,11 +1,14 @@
 var express = require('express');
 var router = express.Router();
 var goodsList = require('../goods/goodsList');
+var login = require('../routerAction/login/index');
 /* GET home page. */
 // router.get('/', function(req, res, next) {
 //   res.render('index', { title: '小k博客 (htmlk.cn)'});
 // });
-
+router.get('/login',function(req,res,nex){
+	login (req,res,nex);
+});
 router.get('/goodsAll',function(req,res,next){  
   
   goodsList.goodsAll(req,res,next);
