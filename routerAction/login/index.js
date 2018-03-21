@@ -1,19 +1,37 @@
 var query = require('../../query/index');
-var jwt = require('jwt-simple');
+var jwt = require('jsonwebtoken');
 var _key = require('../../config/secret');
 var request = require('request');
 const APPID = 'wx3ce22d4f5afb322b',
     APP_SECRET = '87f8306c5370ec9103846aeccbf3c782';
 
+let sql = 'INSERT INTO user (openid,session_key,nick_name,avatar_url) VALUES (?,?,?,?) ON DUPLICATE KEY UPDATE session_key = VALUES(session_key),nick_name = VALUES(nick_name),avatar_url = VALUES(avatar_url)';
+
+function fetchApi(url) {
+    return new Promise((resolve, reject) => {
+        request(url, function (error, response, body) {
+            if (error) {
+                reject({
+                    code: -1,
+                    msg: '微信接口错误',
+                    data: []
+
+                })
+            } else {
+                resolve(body)
+            }
+        });
+    })
+}
 
 
-
-
-function login(req, res, next) {
-
+async function login(req, res, next) {
     try {
+       
         let param = req.query || req.params;
-        let code = param.code;
+        let code = param.code,
+            nick_name = param.nickName,
+            avatar_url = param.avatarUrl;
         if (!code) {
             res.json({
                 code: -1,
@@ -21,24 +39,26 @@ function login(req, res, next) {
             })
             return;
         }
-        let token = jwt.encode({q:2}, _key),
-            decode = jwt.decode(token, _key);
-            console.log(token)
         let url = `https://api.weixin.qq.com/sns/jscode2session?appid=${APPID}&secret=${APP_SECRET}&js_code=${code}&grant_type=authorization_code`;
-        console.log(url,111)
-        request(url, function (error, response, body) {
-            // console.log('error:', error); // Print the error if one occurred
-            // console.log('statusCode:', response ); // Print the response status code if a response was received
-            // console.log('body:', body); // Print the HTML for the Google let 
-             body = JSON.parse(body);
-            res.json(body)
+        var body = await fetchApi(url);
+        body = JSON.parse(body);
+        await query(sql, [body.openid, body.session_key, nick_name, avatar_url]);
+        var payload = {
+            openid: body.openid,
+        };
+        var token = jwt.sign(payload, _key, {
+            expiresIn: 100
+        });
+        res.json({
+            code: 0,
+            msg: '登录成功',
+            data: {
+                token: token
+            }
         })
-        // res.json({
-        //     a:1
-        // })
-        // jsonWrite(res, result);
 
     } catch (err) {
+        // console.log(err)
         next(err)
     }
 };

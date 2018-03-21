@@ -3,6 +3,6 @@ const config = {
     host: 'localhost',
     user: 'root',
     password: 'macbook07',
-    database: 'test'
+    database: 'business_card'
 };
 module.exports = config;

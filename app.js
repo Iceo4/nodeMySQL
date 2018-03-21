@@ -6,18 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var _key = require('./config/secret')
 var index = require('./routes/index');
-var users = require('./routes/users');
 var app = express();
-const crypto = require('crypto');
-
-const secret = 'abcdefg';
-const hash = crypto.createHmac('sha256', secret)
-                   .update('I love cupcakes')
-                   .digest('hex');
-console.log(hash);
-const decipher = crypto.createDecipher('aes192', 'a password');
-
-
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
