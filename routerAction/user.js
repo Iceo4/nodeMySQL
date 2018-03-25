@@ -41,13 +41,14 @@ async function login(param, res, next) {
             uid:selectData[0].id
         };
         var token = jwt.sign(payload, _key, {
-            expiresIn: 180,
+            expiresIn: 60*60*24*15,
         });
         res.json({
             code: 0,
             msg: '登录成功',
             data: {
-                token: token
+                token: token,
+                uid:selectData[0].id
             }
         })
 
@@ -56,11 +57,36 @@ async function login(param, res, next) {
         next(err)
     }
 };
-async  function getUserInfo (token){
-
+async  function getUserInfo (param, res, next){	
+	var userInfo =  await select.findBy('user',{
+		 id:param.uid||param.decodedObj.uid
+     },'nick_name,avatar_url,address,des,gender,id,mobile');
+     if(userInfo.length==0){
+        res.json({
+            code:-1,
+            data:[],
+            msg:'无该用户信息'
+        })
+        return;
+     }
+     userInfo = userInfo[0];
+     if(param.uid&&param.uid!=param.decodedObj.uid){
+        let isHave =  await select.findBy('collection',{
+            uid:param.decodedObj.uid,
+            collection_id:param.uid
+        })
+        userInfo.isHave = isHave.length;
+     }
+     
+     res.json({
+        code:0,
+        data:{...userInfo},
+        msg:'sucess'
+        })
 }
 module.exports = {
     
-    login:login
+    login:login,
+    getUserInfo:getUserInfo
 
 };

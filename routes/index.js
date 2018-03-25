@@ -3,7 +3,8 @@ var router = express.Router();
 var user = require('../routerAction/user');
 var jwt = require('jsonwebtoken');
 const _key =  require('../config/secret');
-let param;
+let param = new Object();
+let decodedObj = new Object();
 router.all('*', function (req, res, next) {
 
 	if (req.method == "POST") {
@@ -21,10 +22,9 @@ router.all('*', function (req, res, next) {
 	}
 	if (req.path != '/login') {
 		try {
-			var decoded = jwt.verify(param.token, _key);
-			console.log(decoded,111)
+			decodedObj = jwt.verify(param.token, _key);
+			param.decodedObj = decodedObj;
 		  } catch(err) {
-			  console.log(err,222)
 			  res.json({
 				  code:-1,
 				  msg:err.message||'token无效'
@@ -38,8 +38,9 @@ router.all('*', function (req, res, next) {
 })
 
 router.all('/login', function (req, res, nex) {
-	console.log(param, 111)
 	user.login(param, res, nex);
 });
-
+router.all('/user/getInfo',async function(req,res,next){
+	user.getUserInfo(param, res, next);
+})
 module.exports = router;

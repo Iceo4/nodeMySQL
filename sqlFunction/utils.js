@@ -4,14 +4,14 @@ async function findBy(table, params,getValues='*' ) {
     let VALUES = [];
     for (key in params) {
         if (params[key]) {
-            keyStr += key + '=? AND';
+            keyStr += ' '+` ${key} =? AND`;
             VALUES.push(params[key]);
         }
 
     }
-    keyStr = keyStr.replace(/AND$/, ' ');
+    keyStr = keyStr.replace(/AND$/, '');
     var sql = `SELECT ${getValues} FROM ${table} where  ${keyStr}`;
-    return await query(sql,VALUES);
+    return  query(sql,VALUES);
 }
 module.exports = {
     findBy: findBy
