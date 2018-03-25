@@ -7,6 +7,7 @@ CREATE TABLE user (
     session_key VARCHAR(255) NOT NULL,
     nick_name VARCHAR(255) DEFAULT NULL,
     avatar_url VARCHAR(255) DEFAULT NULL,
+    gender INT(1) DEFAULT 0, 
     mobile INT(20) DEFAULT NULL,
     address VARCHAR(255) DEFAULT NULL,
     createtime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -14,4 +15,13 @@ CREATE TABLE user (
     PRIMARY KEY (id),
     UNIQUE INDEX (id),
     UNIQUE INDEX  (openid)
+)ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+CREATE TABLE collection (
+    id INT(20) NOT NULL AUTO_INCREMENT UNIQUE,
+    uid INT(20) NOT NULL ,
+    collection_id INT(20) NOT NULL ,
+    createtime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX (uid),
+   FOREIGN KEY (uid,collection_id) REFERENCES user(id,id)
 )ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
