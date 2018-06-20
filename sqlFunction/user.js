@@ -21,6 +21,7 @@ async function updateUser(params, uniqueKey = 'openid') {
     valuesStr = valuesStr.replace(/,$/, '');
     updateStr = updateStr.replace(/,$/, '');
     var sql = `INSERT INTO user (${keyStr}) VALUES (${valuesStr}) ON DUPLICATE KEY UPDATE ${updateStr}`;
+    
     await query(sql,VALUES);
 }
 

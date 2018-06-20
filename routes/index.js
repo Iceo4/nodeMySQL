@@ -43,4 +43,7 @@ router.all('/login', function (req, res, nex) {
 router.all('/user/getInfo',async function(req,res,next){
 	user.getUserInfo(param, res, next);
 })
+router.all('/user/collectCard',async function(req,res,next){
+	user.collectCard(param, res, next);
+})
 module.exports = router;
